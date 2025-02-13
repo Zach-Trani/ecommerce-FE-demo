@@ -5,7 +5,7 @@ function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const baseurl: string = "http://zach-ecommerce-backend.azurewebsites.net/employees";
+    const baseurl: string = "https://zach-ecommerce-backend.azurewebsites.net/employees";
     const url: string = `${baseurl}`;
 
     const getProducts = async () => {
