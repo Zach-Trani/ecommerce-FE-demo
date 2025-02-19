@@ -1,3 +1,11 @@
+To Deploy: 
+* verify requests are made to backend url and not locally
+* npm run build
+* push to github
+* refresh static web app
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

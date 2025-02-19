@@ -1,6 +1,13 @@
 import axios from 'axios'
 import { useState,useEffect } from 'react'
 
+interface Product {
+  id: number;
+  name: string;
+  dept: string;
+  salary: number;
+}
+
 function App() {
   const [products, setProducts] = useState([]);
 
@@ -25,12 +32,29 @@ function App() {
 
   return (
     <>
-      <div>
-        {products.map((product) => {
-          return <img>{JSON.stringify(product)}</img>
-        })}
-        working
-      </div>
+      <div className="row row-cols-2 row-cols-md-3 g-4">
+            {products.map((product: Product) => (
+              <div className="col" key={product.id}>
+                <div className="card h-100">
+                  <img src={product.dept} className="card-img-top" alt="..."/>
+                  <div className="card-body">
+                    <h5 className="card-title">{product.name.toString()}</h5>
+                    <p className="card-text">${product.salary}</p>
+                    {/* <p className="card-text">{product.description}</p> */}
+                    {/* <button type="button" class="btn btn-primary btn-sm" onClick={() => handleCheckout(product)}> */}
+                    <button type="button" className="btn btn-primary btn-sm">
+                      Checkout
+                    </button>
+                  </div>
+                  <div className="card-footer">
+                    <small className="text-muted">
+                      Last updated 3 mins ago
+                    </small>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
     </>
   )
 }
