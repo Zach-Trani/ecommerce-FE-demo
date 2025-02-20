@@ -8,7 +8,7 @@ interface Product {
   salary: number;
 }
 
-function App() {
+const ProductList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -59,4 +59,4 @@ function App() {
   )
 }
 
-export default App
+export default ProductList;

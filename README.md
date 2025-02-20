@@ -1,6 +1,80 @@
 # View Live Ecommerce App
 ### https://lively-moss-09bc30c10.4.azurestaticapps.net/
 ---
+
+
+* app/ - Global state, providers, and config
+
+  * App.js - Main app entry, handles routes
+
+  * routes.js - (Optional) Centralized route definitions
+
+  * store.js - (If using Redux/Zustand) Global state management
+
+  * AppProviders.js - Wrapping app with global providers
+
+  * config.js - Global configuration settings
+
+  * constants.js - Static values (e.g., route names, currency symbols)
+
+  * ThemeProvider.js - Handles global theming (dark/light mode)
+
+  * apiClient.js - Axios or Fetch wrapper for API calls
+
+  * utils.js - Helper functions used across the app
+
+* components/ - Reusable global components
+
+  * Navbar.js - Navigation bar
+
+  * Footer.js - Footer section
+
+  * Button.js - Generic button component
+
+  * Modal.js - Generic modal component
+
+  * Spinner.js - Loading spinner
+
+* features/ - Feature-based modules
+
+  * products/ - Product-related logic
+
+    * components/
+
+      * HomePage.js - Displays all products
+
+      * ProductPage.js - Displays a single product
+
+      * ProductList.js - List of products
+
+    * api/
+
+      * productApi.js - API calls related to products
+
+    * utils/ - (Optional) Helper functions for products
+
+  * cart/ - Shopping cart-related logic
+
+    * components/
+
+      * CartPage.js - Displays items in the cart
+
+      * CartItem.js - Individual cart item component
+
+    * utils/ - (Optional) Cart-related utilities
+
+  * checkout/ - Checkout and payment process
+
+    * components/
+
+      * CheckoutPage.js - Handles checkout process
+
+    * utils/ - (Optional) Checkout-related utilities
+
+* index.js - Entry point of the app, renders App.js
+
+
+---
 ### To Deploy: 
 * verify requests are made to backend url and not locally
 * npm run build
