@@ -19,13 +19,13 @@ const ProductPage = () => {
       <div className="container mt-4">
         <div className="card">
           <img
-            src={selectedProduct.dept}
+            src={selectedProduct.imgUrl}
             className="card-img-top"
-            alt={selectedProduct.name}
+            alt={selectedProduct.descriptionShort}
           />
           <div className="card-body">
-            <h2 className="card-title">{selectedProduct.name}</h2>
-            <p className="card-text">Price: ${selectedProduct.salary}</p>
+            <h2 className="card-title">{selectedProduct.descriptionLong}</h2>
+            <p className="card-text">Price: ${selectedProduct.price}</p>
           </div>
         </div>
       </div>

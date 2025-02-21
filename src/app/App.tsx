@@ -5,9 +5,12 @@ import ProductPage from "../features/products/components/ProductPage";
 
 interface Product {
   id: number;
-  name: string;
-  dept: string;
-  salary: number;
+  imgUrl: string;
+  descriptionShort: string;
+  descriptionLong: string | null;  // Optional field
+  price: number;
+  material: string | null;         // Optional field
+  size: string | null;            // Optional field
 }
 
 interface ProductContextType {

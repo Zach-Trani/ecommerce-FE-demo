@@ -5,9 +5,12 @@ import { useNavigate } from 'react-router-dom';
 
 interface Product {
   id: number;
-  name: string;
-  dept: string;
-  salary: number;
+  imgUrl: string;
+  descriptionShort: string;
+  descriptionLong: string | null;  // Optional field
+  price: number;
+  material: string | null;         // Optional field
+  size: string | null;            // Optional field
 }
 
 /**
@@ -54,10 +57,10 @@ const ProductList = () => {
             {products.map((product: Product) => (
               <div className="col" key={product.id} onClick={() => handleProductClick(product)}>
                 <div className="card h-100">
-                  <img src={product.dept} className="card-img-top" alt="..."/>
+                  <img src={product.imgUrl} className="card-img-top" alt="..."/>
                   <div className="card-body">
-                    <h5 className="card-title">{product.name.toString()}</h5>
-                    <p className="card-text">${product.salary}</p>
+                    <h5 className="card-title">{product.descriptionShort.toString()}</h5>
+                    <p className="card-text">${product.price}</p>
                     {/* <p className="card-text">{product.description}</p> */}
                     {/* <button type="button" class="btn btn-primary btn-sm" onClick={() => handleCheckout(product)}> */}
                     <button type="button" className="btn btn-primary btn-sm">
