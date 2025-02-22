@@ -53,6 +53,7 @@ const ProductList = () => {
 
   return (
     <>
+    <h1>7pm working</h1>
       <div className="row row-cols-2 row-cols-md-3 g-4">
             {products.map((product: Product) => (
               <div className="col" key={product.id} onClick={() => handleProductClick(product)}>
