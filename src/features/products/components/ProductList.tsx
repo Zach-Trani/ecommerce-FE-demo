@@ -28,8 +28,8 @@ const ProductList = () => {
   
   useEffect(() => {
     // comment in front end URL for production
-    const baseurl: string = "https://zach-ecommerce-backend.azurewebsites.net/products";
-    // const baseurl: string = "http://localhost:9191/products";
+    // const baseurl: string = "https://zach-ecommerce-backend.azurewebsites.net/products";
+    const baseurl: string = "http://localhost:9191/products";
     const url: string = `${baseurl}`;
 
     // main get all products request

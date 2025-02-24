@@ -2,6 +2,14 @@
 ### https://lively-moss-09bc30c10.4.azurestaticapps.net/
 ---
 
+### To Deploy: 
+* verify requests are made to backend url and not locally
+* npm run build
+* push to github
+* wait for Azure Static Web Apps CI/CD to complete
+* refresh static web app
+
+---
 
 * app/ - Global state, providers, and config
 
@@ -72,15 +80,6 @@
     * utils/ - (Optional) Checkout-related utilities
 
 * index.js - Entry point of the app, renders App.js
-
-
----
-### To Deploy: 
-* verify requests are made to backend url and not locally
-* npm run build
-* push to github
-* wait for Azure Static Web Apps CI/CD to complete
-* refresh static web app
 
 ---
 

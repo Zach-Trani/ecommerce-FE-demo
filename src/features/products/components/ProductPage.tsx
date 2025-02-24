@@ -1,6 +1,12 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { ProductContext } from "../../../app/App";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
+);
+
 
 /**
  * Page that allows a user to add a product to their cart
@@ -14,6 +20,57 @@ const ProductPage = () => {
   if (!selectedProduct) {
     return <Navigate to="/" replace />;
   }
+
+  const handleCheckout = async () => {
+    try {
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error("Stripe failed to initialize");
+      }
+
+      // round to avoid floating-point precision errors
+      const amountInCents = Math.round(selectedProduct.price * 100);
+
+      const response = await fetch(
+        "https://zach-ecommerce-backend.azurewebsites.net/product/v1/checkout",
+        // "http://localhost:9191/product/v1/checkout",
+        {
+          method: "POST",
+          credentials: "include", // Add this line
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"  // Add this line
+          },
+          body: JSON.stringify({
+            name: selectedProduct.descriptionShort,
+            amount: amountInCents,
+            quantity: 1,
+            currency: "usd" // lowercase to match backend expectations
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Redirect to Stripe checkout using the session ID from the response
+      const result = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      // You might want to show an error message to the user here
+    }
+  }
+
+
   return (
     <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
       <div
@@ -34,6 +91,13 @@ const ProductPage = () => {
                     {selectedProduct.descriptionLong}
                   </h2>
                   <p className="card-text">Price: ${selectedProduct.price}</p>
+                  <button 
+                      type="button" 
+                      className="btn btn-primary btn-sm" // Changed class to className
+                      onClick={() => handleCheckout()}
+                    >
+                      Checkout
+                    </button>
                 </div>
               </div>
             </div>
