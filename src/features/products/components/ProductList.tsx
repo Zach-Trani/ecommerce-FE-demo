@@ -62,8 +62,6 @@ const ProductList = () => {
                   <div className="card-body">
                     <h5 className="card-title">{product.descriptionShort.toString()}</h5>
                     <p className="card-text">${product.price}</p>
-                    {/* <p className="card-text">{product.description}</p> */}
-                    {/* <button type="button" class="btn btn-primary btn-sm" onClick={() => handleCheckout(product)}> */}
                     <button type="button" className="btn btn-primary btn-sm">
                       Checkout
                     </button>
