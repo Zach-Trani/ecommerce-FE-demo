@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "../features/products/components/HomePage";
 import ProductPage from "../features/products/components/ProductPage";
+import CheckoutSuccessPage from "../features/products/components/CheckoutSuccessPage";
 
 interface Product {
   id: number;
@@ -31,6 +32,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products/:id" element={<ProductPage />} />
+          <Route path="/success" element={<CheckoutSuccessPage />} />
         </Routes>
       </Router>
     </ProductContext.Provider>

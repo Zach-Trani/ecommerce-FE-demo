@@ -36,10 +36,10 @@ const ProductPage = () => {
         // "http://localhost:9191/product/v1/checkout",
         {
           method: "POST",
-          credentials: "include", // Add this line
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"  // Add this line
+            "Accept": "application/json"
           },
           body: JSON.stringify({
             name: selectedProduct.descriptionShort,
