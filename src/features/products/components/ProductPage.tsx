@@ -7,7 +7,6 @@ const stripePromise = loadStripe(
   "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
 );
 
-
 /**
  * Page that allows a user to add a product to their cart
  *
@@ -21,31 +20,43 @@ const ProductPage = () => {
     return <Navigate to="/" replace />;
   }
 
-  const handleCheckout = async () => {
+  const handleCartCheckout = async () => {
     try {
       const stripe = await stripePromise;
       if (!stripe) {
         throw new Error("Stripe failed to initialize");
       }
 
+      // Example cart items - in a real app, this would come from your shopping cart state
+      const cartItems = [
+        {
+          name: "Phone Stand",
+          amount: 1999, // $19.99 in cents
+          quantity: 1,
+        },
+        {
+          name: "Stanley Accessory",
+          amount: 2499, // $24.99 in cents
+          quantity: 2,
+        },
+      ];
+
       // round to avoid floating-point precision errors
       const amountInCents = Math.round(selectedProduct.price * 100);
 
       const response = await fetch(
-        // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/checkout",
-        "http://localhost:9191/product/v1/checkout",
+        // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
+        "http://localhost:9191/product/v1/cart/checkout",
         {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            Accept: "application/json",
           },
           body: JSON.stringify({
-            name: selectedProduct.descriptionShort,
-            amount: amountInCents,
-            quantity: 1,
-            currency: "usd" // lowercase to match backend expectations
+            items: cartItems,
+            currency: "usd",
           }),
         }
       );
@@ -68,8 +79,7 @@ const ProductPage = () => {
       console.error("Error during checkout:", error);
       // You might want to show an error message to the user here
     }
-  }
-
+  };
 
   return (
     <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
@@ -91,13 +101,13 @@ const ProductPage = () => {
                     {selectedProduct.descriptionLong}
                   </h2>
                   <p className="card-text">Price: ${selectedProduct.price}</p>
-                  <button 
-                      type="button" 
-                      className="btn btn-primary btn-sm" // Changed class to className
-                      onClick={() => handleCheckout()}
-                    >
-                      Checkout
-                    </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm" // Changed class to className
+                    onClick={() => handleCartCheckout()}
+                  >
+                    Checkout
+                  </button>
                 </div>
               </div>
             </div>
@@ -134,14 +144,20 @@ const ProductPage = () => {
                 <div className="">product description</div>
                 <div className="">quantity just added</div>
                 <div className="">price</div>
-                <div className="">
-                  cart subtotal (# of items): $price
-                </div>
+                <div className="">cart subtotal (# of items): $price</div>
                 <div className="">See more similar products:</div>
-                <div className="">product image, description, price, view oroduct</div>
-                <div className="">product image, description, price, view oroduct</div>
-                <div className="">product image, description, price, view oroduct</div>
-                <div className="">product image, description, price, view oroduct</div>
+                <div className="">
+                  product image, description, price, view oroduct
+                </div>
+                <div className="">
+                  product image, description, price, view oroduct
+                </div>
+                <div className="">
+                  product image, description, price, view oroduct
+                </div>
+                <div className="">
+                  product image, description, price, view oroduct
+                </div>
               </div>
             </div>
           </div>
