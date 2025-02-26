@@ -45,8 +45,8 @@ const ProductPage = () => {
       // const amountInCents = Math.round(selectedProduct.price * 100);
 
       const response = await fetch(
-        // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
-        "http://localhost:9191/product/v1/cart/checkout",
+        "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
+        // "http://localhost:9191/product/v1/cart/checkout",
         {
           method: "POST",
           credentials: "include",
