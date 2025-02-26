@@ -3,7 +3,7 @@
 ---
 
 ### To Deploy: 
-* verify requests are made to backend url and not locally
+* verify homepage & stripe requests are made to backend url and not locally
 * npm run build
 * push to github
 * wait for Azure Static Web Apps CI/CD to complete
