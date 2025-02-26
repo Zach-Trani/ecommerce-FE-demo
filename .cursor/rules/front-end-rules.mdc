@@ -1,6 +1,6 @@
 ---
-description: Main Instructions
-globs: 
+description: Guidelines for project
+globs: *.tsx, *.json, *.ts, *.css
 ---
 
 # Review the Project Changelog and Project Directory notes below for our Ecommerce App's React Typescript Front End. This front end interacts with a Spring Boot Back End.
