@@ -42,7 +42,7 @@ const ProductPage = () => {
       ];
 
       // round to avoid floating-point precision errors
-      const amountInCents = Math.round(selectedProduct.price * 100);
+      // const amountInCents = Math.round(selectedProduct.price * 100);
 
       const response = await fetch(
         // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
