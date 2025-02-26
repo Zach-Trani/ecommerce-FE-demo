@@ -53,7 +53,8 @@ const ProductList = () => {
 
   return (
     <>
-    <h1>7pm working</h1>
+    <h1>Welcome to Zach's 3D Printed Parts Ecommerce App!</h1>
+    <p>Pardon our temporary "lively-moss" url - we are in the process of purchasing a permanent domain name.</p>
       <div className="row row-cols-2 row-cols-md-3 g-4">
             {products.map((product: Product) => (
               <div className="col" key={product.id} onClick={() => handleProductClick(product)}>
@@ -75,6 +76,7 @@ const ProductList = () => {
               </div>
             ))}
           </div>
+          <p>© 2025 | Zachary Trani</p>
     </>
   )
 }
