@@ -41,7 +41,7 @@ export const CartListContext = createContext<CartListContextType | undefined>(
 
 function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [cartList, setCartList] = useState<Product[] | null>(null);
+  const [cartList, setCartList] = useState<CartItem[] | null>(null);
 
   return (
       <CartListContext.Provider value={{ cartList, setCartList }}>
