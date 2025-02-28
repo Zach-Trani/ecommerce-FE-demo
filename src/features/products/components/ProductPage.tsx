@@ -1,7 +1,15 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { ProductContext } from "../../../app/App";
+import { CartListContext, ProductContext } from "../../../app/App";
 import { loadStripe } from "@stripe/stripe-js";
+
+interface CartItem {
+  id: number;
+  name: string; // maps to product.descriptionShort
+  amount: number; // price in cents
+  quantity: number; // quantity in cart
+  imgUrl?: string; // optional field for UI display
+}
 
 const stripePromise = loadStripe(
   "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
@@ -14,12 +22,14 @@ const stripePromise = loadStripe(
  */
 const ProductPage = () => {
   const { selectedProduct } = useContext(ProductContext)!;
+  const { cartList, setCartList } = useContext(CartListContext)!;
 
-  // remove when bypass of useContext is implmented
+  // need to remove - creates some unintended behavior currently
   if (!selectedProduct) {
     return <Navigate to="/" replace />;
   }
 
+  // Makes a POST request to our back end with our global cartList state
   const handleCartCheckout = async () => {
     try {
       const stripe = await stripePromise;
@@ -27,26 +37,42 @@ const ProductPage = () => {
         throw new Error("Stripe failed to initialize");
       }
 
-      // Example cart items - in a real app, this would come from your shopping cart state
-      const cartItems = [
-        {
-          name: "Phone Stand",
-          amount: 1999, // $19.99 in cents
-          quantity: 1,
-        },
-        {
-          name: "Stanley Accessory",
-          amount: 2499, // $24.99 in cents
-          quantity: 2,
-        },
-      ];
+      // reject checkout attempt if cart is empty
+      if (!cartList || cartList.length === 0) {
+        console.error("Cart is empty");
+        return;
+      }
 
+      // Example cart items - in a real app, this would come from your shopping cart state
+      // Should we be creating a schema out of this or just use interfaces?
+      // May be able to send images to stripe checkout page, see https://docs.stripe.com/payments/checkout
+      // const cartItems = [
+      //   {
+      //     name: "Phone Stand",
+      //     amount: 1999, // $19.99 in cents
+      //     quantity: 1,
+      //   },
+      //   {
+      //     name: "Stanley Accessory",
+      //     amount: 2499, // $24.99 in cents
+      //     quantity: 2,
+      //   },
+      // ];
+
+      // Stripe only accepts these product properties
+      const stripeCartList = cartList.map((item) => ({
+        name: item.name,
+        amount: item.amount,
+        quantity: item.quantity
+      }))
+
+      // Needed???
       // round to avoid floating-point precision errors
       // const amountInCents = Math.round(selectedProduct.price * 100);
 
       const response = await fetch(
-        "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
-        // "http://localhost:9191/product/v1/cart/checkout",
+        // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
+        "http://localhost:9191/product/v1/cart/checkout",
         {
           method: "POST",
           credentials: "include",
@@ -55,7 +81,7 @@ const ProductPage = () => {
             Accept: "application/json",
           },
           body: JSON.stringify({
-            items: cartItems,
+            items: stripeCartList,
             currency: "usd",
           }),
         }
@@ -78,6 +104,41 @@ const ProductPage = () => {
     } catch (error) {
       console.error("Error during checkout:", error);
       // You might want to show an error message to the user here
+    }
+  };
+
+  // pushes the selectedProduct to our global cartList state. need to account for qty of products
+  const addToCart = () => {
+    // Edge case not handled:
+    // right now selectedProduct exists only if navigated to through to homepage
+    // can selectedProduct exist if we navigate directly to '/products/1'?
+    if (selectedProduct) {
+      const cartItem = {
+        id: selectedProduct.id,
+        name: selectedProduct.descriptionShort,
+        amount: Math.round(selectedProduct.price * 100), // Convert to cents
+        quantity: 1,
+        imgUrl: selectedProduct.imgUrl,
+      };
+
+      // If cart is empty, initialize it
+      if (!cartList) {
+        setCartList([cartItem]);
+        return;
+      }
+
+      // Check if product already exists in cart
+      const existingItemIndex = cartList.findIndex(item => item.id === selectedProduct.id);
+
+      if (existingItemIndex >= 0) {
+        // selectedProduct is already in cart, increment quantity
+        const updatedCart = [...cartList];
+        updatedCart[existingItemIndex].quantity += 1;
+        setCartList(updatedCart);
+      } else {
+        // new product in list, add to cart
+        setCartList([...cartList, cartItem]);
+      }
     }
   };
 
@@ -120,6 +181,7 @@ const ProductPage = () => {
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasRight"
               aria-controls="offcanvasRight"
+              onClick={addToCart}
             >
               Add to cart
             </button>
@@ -140,7 +202,20 @@ const ProductPage = () => {
                 ></button>
               </div>
               <div className="offcanvas-body">
-                <div className="">product image</div>
+                {/* Map through global cartList state and return a mini-cart display */}
+                {/* At some point we will make a full-page-cart display at "/cart"  */}
+
+                {cartList?.map((product) => (
+                  <>
+                    <img src={product.imgUrl} />
+                    <div>{product.name}</div>
+                    <div>{product.amount}</div>
+                    <div>Quantity: x</div>
+                  </>
+                ))}
+                <div>Cart Subtotal (x items): $xx.xx</div>
+
+                {/* <div className="">product image</div>
                 <div className="">product description</div>
                 <div className="">quantity just added</div>
                 <div className="">price</div>
@@ -157,7 +232,7 @@ const ProductPage = () => {
                 </div>
                 <div className="">
                   product image, description, price, view oroduct
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

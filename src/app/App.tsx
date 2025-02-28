@@ -15,29 +15,47 @@ interface Product {
   size: string | null;            // Optional field
 }
 
+interface CartItem {
+  id: number;
+  name: string; // maps to product.descriptionShort
+  amount: number; // price in cents
+  quantity: number; // quantity in cart
+  imgUrl?: string; // optional field for UI display
+}
+
 interface ProductContextType {
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
 }
-
 export const ProductContext = createContext<ProductContextType | undefined>(
+  undefined
+);
+
+interface CartListContextType {
+  cartList: CartItem[] | null;
+  setCartList: (cartItems: CartItem[] | null) => void;
+}
+export const CartListContext = createContext<CartListContextType | undefined>(
   undefined
 );
 
 function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [cartList, setCartList] = useState<Product[] | null>(null);
 
   return (
-    <ProductContext.Provider value={{ selectedProduct, setSelectedProduct }}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products/:id" element={<ProductPage />} />
-          <Route path="/success" element={<CheckoutSuccessPage />} />
-          <Route path="/cancel" element={<CheckoutCancelPage />} />
-        </Routes>
-      </Router>
-    </ProductContext.Provider>
+      <CartListContext.Provider value={{ cartList, setCartList }}>
+        <ProductContext.Provider value={{ selectedProduct, setSelectedProduct }}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/products/:id" element={<ProductPage />} />
+              <Route path="/success" element={<CheckoutSuccessPage />} />
+              <Route path="/cancel" element={<CheckoutCancelPage />} />
+            </Routes>
+          </Router>
+        </ProductContext.Provider>
+      </CartListContext.Provider>
   );
 }
 
