@@ -1,15 +1,7 @@
-import { useContext, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { CartListContext, ProductContext } from "../../../app/App";
 import { loadStripe } from "@stripe/stripe-js";
-
-interface CartItem {
-  id: number;
-  name: string; // maps to product.descriptionShort
-  amount: number; // price in cents
-  quantity: number; // quantity in cart
-  imgUrl?: string; // optional field for UI display
-}
 
 const stripePromise = loadStripe(
   "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
@@ -31,24 +23,27 @@ const ProductPage = () => {
     const fetchProductDetails = async () => {
       if (!selectedProduct && id) {
         try {
-          const response = await fetch(`http://localhost:9191/products/${id}`);
+          const baseurl: string =
+            window.location.hostname !== "localhost"
+              ? "https://zach-ecommerce-backend.azurewebsites.net/products"
+              : "http://localhost:9191/products";
+          const response = await fetch(`${baseurl}/${id}`);
 
           if (!response.ok) {
-            throw new Error(`Product with ID ${id} not found.`)
+            throw new Error(`Product with ID ${id} not found.`);
           }
 
-          const productData = await response.json()
-          setSelectedProduct(productData)
+          const productData = await response.json();
+          setSelectedProduct(productData);
         } catch (error) {
           console.error("Error fetching product details:", error);
         } finally {
-
         }
       }
-    }
+    };
 
     fetchProductDetails();
-  }, [id, selectedProduct, setSelectedProduct])
+  }, [id, selectedProduct, setSelectedProduct]);
 
   // need to remove - creates some unintended behavior currently
   // if (!selectedProduct) {
@@ -89,16 +84,22 @@ const ProductPage = () => {
       const stripeCartList = cartList.map((item) => ({
         name: item.name,
         amount: item.amount,
-        quantity: item.quantity
-      }))
+        quantity: item.quantity,
+      }));
 
       // Needed???
       // round to avoid floating-point precision errors
       // const amountInCents = Math.round(selectedProduct.price * 100);
 
+      const baseurl: string = 
+      window.location.hostname !== 'localhost' 
+        ? "https://zach-ecommerce-backend.azurewebsites.net/products" 
+        : "http://localhost:9191/products";
+
       const response = await fetch(
         // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
-        "http://localhost:9191/product/v1/cart/checkout",
+        // "http://localhost:9191/product/v1/cart/checkout",
+        `${baseurl}/v1/cart/checkout`,
         {
           method: "POST",
           credentials: "include",
@@ -154,7 +155,9 @@ const ProductPage = () => {
       }
 
       // Check if product already exists in cart
-      const existingItemIndex = cartList.findIndex(item => item.id === selectedProduct.id);
+      const existingItemIndex = cartList.findIndex(
+        (item) => item.id === selectedProduct.id
+      );
 
       if (existingItemIndex >= 0) {
         // selectedProduct is already in cart, increment quantity
