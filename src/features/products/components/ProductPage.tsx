@@ -94,7 +94,7 @@ const ProductPage = () => {
       const baseurl: string = 
       window.location.hostname !== 'localhost' 
         ? "https://zach-ecommerce-backend.azurewebsites.net/products" 
-        : "http://localhost:9191/products";
+        : "http://localhost:9191/product";
 
       const response = await fetch(
         // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
@@ -144,7 +144,7 @@ const ProductPage = () => {
         id: selectedProduct.id,
         name: selectedProduct.descriptionShort,
         amount: Math.round(selectedProduct.price * 100), // Convert to cents
-        quantity: 1,
+        quantity: 1, // update to receive local state qty
         imgUrl: selectedProduct.imgUrl,
       };
 
@@ -170,6 +170,8 @@ const ProductPage = () => {
       }
     }
   };
+
+  
 
   return (
     <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
@@ -230,38 +232,20 @@ const ProductPage = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="offcanvas-body">
-                {/* Map through global cartList state and return a mini-cart display */}
-                {/* At some point we will make a full-page-cart display at "/cart"  */}
 
+              {/* mapping through cart list to show mini-cart */}
+              <div className="offcanvas-body">
                 {cartList?.map((product) => (
                   <>
                     <img src={product.imgUrl} />
                     <div>{product.name}</div>
-                    <div>{product.amount}</div>
-                    <div>Quantity: x</div>
+                    <div>${product.amount/100}</div>
+                    <div>Quantity: {product.quantity}</div>
                   </>
                 ))}
-                <div>Cart Subtotal (x items): $xx.xx</div>
-
-                {/* <div className="">product image</div>
-                <div className="">product description</div>
-                <div className="">quantity just added</div>
-                <div className="">price</div>
-                <div className="">cart subtotal (# of items): $price</div>
-                <div className="">See more similar products:</div>
-                <div className="">
-                  product image, description, price, view oroduct
-                </div>
-                <div className="">
-                  product image, description, price, view oroduct
-                </div>
-                <div className="">
-                  product image, description, price, view oroduct
-                </div>
-                <div className="">
-                  product image, description, price, view oroduct
-                </div> */}
+                <div>Cart Subtotal ({
+                    cartList?.reduce((acc, item) => acc + (item.quantity), 0) || 0
+                  } items): ${cartList?.reduce((acc, item) => acc + (item.amount * item.quantity / 100), 0) || 0}</div>
               </div>
             </div>
           </div>
