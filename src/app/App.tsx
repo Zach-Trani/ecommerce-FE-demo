@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "../features/products/components/HomePage";
 import ProductPage from "../features/products/components/ProductPage";
@@ -42,6 +42,29 @@ export const CartListContext = createContext<CartListContextType | undefined>(
 function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartList, setCartList] = useState<CartItem[] | null>(null);
+
+  // on page mount - load cartList into global state from local storage
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cartList');
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        setCartList(parsedCart);
+        console.log('local storage retrieved!')
+      } catch (error) {
+        console.error('Error parsing saved cart:', error);
+        localStorage.removeItem('cartList');
+      }
+    }
+  }, [])
+
+  // on cartList state update - save to local storage for offline data persisentce
+  useEffect(() => {
+    if (cartList && cartList.length > 0) {
+      localStorage.setItem('cartList', JSON.stringify(cartList));
+      console.log('local storage updated!')
+    }
+  }, [cartList]);
 
   return (
       <CartListContext.Provider value={{ cartList, setCartList }}>

@@ -234,6 +234,7 @@ const ProductPage = () => {
               </div>
 
               {/* mapping through cart list to show mini-cart */}
+              {/* bug with quantity and cart subtotal - they dont display when you back arrow from stripe page */}
               <div className="offcanvas-body">
                 {cartList?.map((product) => (
                   <>
