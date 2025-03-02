@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import { CartListContext, ProductContext } from "../../../app/App";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -21,13 +21,39 @@ const stripePromise = loadStripe(
  * @returns
  */
 const ProductPage = () => {
-  const { selectedProduct } = useContext(ProductContext)!;
+  const { id } = useParams(); // gets product id from URL
+  const { selectedProduct, setSelectedProduct } = useContext(ProductContext)!; // next add to cart item
   const { cartList, setCartList } = useContext(CartListContext)!;
 
+  // selectedProduct global state only exists when a product is clicked from HomePage.tsx,
+  // this manually updates the state if a user directly navigates to '/product/1'
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      if (!selectedProduct && id) {
+        try {
+          const response = await fetch(`http://localhost:9191/products/${id}`);
+
+          if (!response.ok) {
+            throw new Error(`Product with ID ${id} not found.`)
+          }
+
+          const productData = await response.json()
+          setSelectedProduct(productData)
+        } catch (error) {
+          console.error("Error fetching product details:", error);
+        } finally {
+
+        }
+      }
+    }
+
+    fetchProductDetails();
+  }, [id, selectedProduct, setSelectedProduct])
+
   // need to remove - creates some unintended behavior currently
-  if (!selectedProduct) {
-    return <Navigate to="/" replace />;
-  }
+  // if (!selectedProduct) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   // Makes a POST request to our back end with our global cartList state
   const handleCartCheckout = async () => {
@@ -153,15 +179,15 @@ const ProductPage = () => {
             <div className="container mt-4">
               <div className="card p-3 mb-2 bg-dark text-white">
                 <img
-                  src={selectedProduct.imgUrl}
+                  src={selectedProduct?.imgUrl}
                   className="card-img-top"
-                  alt={selectedProduct.descriptionShort}
+                  alt={selectedProduct?.descriptionShort}
                 />
                 <div className="card-body">
                   <h2 className="card-title">
-                    {selectedProduct.descriptionLong}
+                    {selectedProduct?.descriptionLong}
                   </h2>
-                  <p className="card-text">Price: ${selectedProduct.price}</p>
+                  <p className="card-text">Price: ${selectedProduct?.price}</p>
                   <button
                     type="button"
                     className="btn btn-primary btn-sm" // Changed class to className
