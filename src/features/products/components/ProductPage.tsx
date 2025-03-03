@@ -268,10 +268,10 @@ const ProductPage = () => {
                   Cart Subtotal (
                   {cartList?.reduce((acc, item) => acc + item.quantity, 0) || 0}{" "}
                   items): $
-                  {cartList?.reduce(
+                  {(cartList?.reduce(
                     (acc, item) => acc + (item.amount * item.quantity) / 100,
                     0
-                  ) || 0}
+                  ) || 0).toFixed(2)}
                 </div>
                 <button
                     type="button"
