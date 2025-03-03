@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CartListContext, ProductContext } from "../../../app/App";
 import { loadStripe } from "@stripe/stripe-js";
@@ -16,6 +16,7 @@ const ProductPage = () => {
   const { id } = useParams(); // gets product id from URL
   const { selectedProduct, setSelectedProduct } = useContext(ProductContext)!; // next add to cart item
   const { cartList, setCartList } = useContext(CartListContext)!;
+  const [selectedQuantity, setSelectedQuantity] = useState(1); // Add state for quantity
 
   // selectedProduct global state only exists when a product is clicked from HomePage.tsx,
   // this manually updates the state if a user directly navigates to '/product/1'
@@ -91,10 +92,10 @@ const ProductPage = () => {
       // round to avoid floating-point precision errors
       // const amountInCents = Math.round(selectedProduct.price * 100);
 
-      const baseurl: string = 
-      window.location.hostname !== 'localhost' 
-        ? "https://zach-ecommerce-backend.azurewebsites.net/products" 
-        : "http://localhost:9191/product";
+      const baseurl: string =
+        window.location.hostname !== "localhost"
+          ? "https://zach-ecommerce-backend.azurewebsites.net/products"
+          : "http://localhost:9191/product";
 
       const response = await fetch(
         // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
@@ -134,7 +135,7 @@ const ProductPage = () => {
     }
   };
 
-  // pushes the selectedProduct to our global cartList state. need to account for qty of products
+  // pushes the selectedProduct to our global cartList state with the selected quantity
   const addToCart = () => {
     // Edge case not handled:
     // right now selectedProduct exists only if navigated to through to homepage
@@ -144,7 +145,7 @@ const ProductPage = () => {
         id: selectedProduct.id,
         name: selectedProduct.descriptionShort,
         amount: Math.round(selectedProduct.price * 100), // Convert to cents
-        quantity: 1, // update to receive local state qty
+        quantity: selectedQuantity, // Use the selected quantity
         imgUrl: selectedProduct.imgUrl,
       };
 
@@ -160,9 +161,9 @@ const ProductPage = () => {
       );
 
       if (existingItemIndex >= 0) {
-        // selectedProduct is already in cart, increment quantity
+        // selectedProduct is already in cart, update with new quantity
         const updatedCart = [...cartList];
-        updatedCart[existingItemIndex].quantity += 1;
+        updatedCart[existingItemIndex].quantity += selectedQuantity;
         setCartList(updatedCart);
       } else {
         // new product in list, add to cart
@@ -171,7 +172,8 @@ const ProductPage = () => {
     }
   };
 
-  
+  // Generate quantity options for dropdown (1-10)
+  const quantityOptions = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
     <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
@@ -188,24 +190,38 @@ const ProductPage = () => {
                   className="card-img-top"
                   alt={selectedProduct?.descriptionShort}
                 />
-                <div className="card-body">
-                  <h2 className="card-title">
-                    {selectedProduct?.descriptionLong}
-                  </h2>
-                  <p className="card-text">Price: ${selectedProduct?.price}</p>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-sm" // Changed class to className
-                    onClick={() => handleCartCheckout()}
-                  >
-                    Checkout
-                  </button>
-                </div>
+                
               </div>
             </div>
           </div>
           {/* Offcanvas side bar to display shopping cart */}
           <div className="col-md-4 mb-2 bg-dark text-white">
+            
+          <div className="card-body">
+                  <h2 className="card-title">
+                    {selectedProduct?.descriptionLong}
+                  </h2>
+                  <p className="card-text">Price: ${selectedProduct?.price}</p>
+                </div>
+
+            {/* Quantity dropdown */}
+            <div className="mb-3">
+              <label htmlFor="quantityDropdown" className="form-label">Quantity:</label>
+              <select 
+                className="form-select" 
+                id="quantityDropdown"
+                value={selectedQuantity}
+                onChange={(e) => setSelectedQuantity(Number(e.target.value))}
+              >
+                {quantityOptions.map((qty) => (
+                  <option key={qty} value={qty}>
+                    {qty}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* add to cart button */}
             <button
               className="btn btn-light"
               type="button"
@@ -217,6 +233,9 @@ const ProductPage = () => {
               Add to cart
             </button>
 
+            
+
+            {/* off canvas slider */}
             <div
               className="offcanvas offcanvas-end bg-dark text-white"
               tabIndex={-1}
@@ -240,13 +259,27 @@ const ProductPage = () => {
                   <>
                     <img src={product.imgUrl} />
                     <div>{product.name}</div>
-                    <div>${product.amount/100}</div>
+                    <div>${product.amount / 100}</div>
                     <div>Quantity: {product.quantity}</div>
                   </>
                 ))}
-                <div>Cart Subtotal ({
-                    cartList?.reduce((acc, item) => acc + (item.quantity), 0) || 0
-                  } items): ${cartList?.reduce((acc, item) => acc + (item.amount * item.quantity / 100), 0) || 0}</div>
+                {/* cart subtotal calculation */}
+                <div>
+                  Cart Subtotal (
+                  {cartList?.reduce((acc, item) => acc + item.quantity, 0) || 0}{" "}
+                  items): $
+                  {cartList?.reduce(
+                    (acc, item) => acc + (item.amount * item.quantity) / 100,
+                    0
+                  ) || 0}
+                </div>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleCartCheckout()}
+                  >
+                    Checkout
+                  </button>
               </div>
             </div>
           </div>
