@@ -1,6 +1,7 @@
 import ProductList from "./ProductList";
 
 const HomePage = () => {
+    
     return (
         <div>
             <ProductList />

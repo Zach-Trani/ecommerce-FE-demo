@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { useState,useEffect, useContext } from 'react'
+import axios from 'axios';
+import { useState, useEffect, useContext } from 'react';
 import { ProductContext } from '../../../app/App';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,15 +27,16 @@ const ProductList = () => {
 
   
   useEffect(() => {
-    // comment in front end URL for production
-    const baseurl: string = "https://zach-ecommerce-backend.azurewebsites.net/products";
-    // const baseurl: string = "http://localhost:9191/products";
-    const url: string = `${baseurl}`;
+    // Use a ternary operator to set the base URL
+    const baseurl: string = 
+      window.location.hostname !== 'localhost' 
+        ? "https://zach-ecommerce-backend.azurewebsites.net/products" 
+        : "http://localhost:9191/products";
 
     // main get all products request
     const getProducts = async () => {
       try {
-        const response = await axios.get(url);
+        const response = await axios.get(baseurl);
         console.log(response.data);
         setProducts(response.data);
       } catch (error) {
