@@ -14,6 +14,8 @@ v1.3 - created global state with usecontext to allow users to select one of the 
 v1.4 - created the aethetics but not yet functional add to cart button that opens the bootstrap offcanvas in ProductPage.tsx
 v1.5 - created a checkout button that makes a post request to our backend stripe checkout service by sending a list of products where each product contains a name, quantity, and amount to the "product/v1/checkout" endpoint
 v1.6 - added cartList global state to persist products in a cart listenerCount, can now save cartList global state to local storage for offline data persistence
+v1.7 - added a quantity dropdown list for users to selected product quantity
+v1.8 - moved stripe checkout button into the offcanvas slider
 
 ## Project Directory
 

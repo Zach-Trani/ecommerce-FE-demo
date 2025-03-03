@@ -94,7 +94,7 @@ const ProductPage = () => {
 
       const baseurl: string =
         window.location.hostname !== "localhost"
-          ? "https://zach-ecommerce-backend.azurewebsites.net/products"
+          ? "https://zach-ecommerce-backend.azurewebsites.net/product"
           : "http://localhost:9191/product";
 
       const response = await fetch(
