@@ -1,11 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CartListContext, ProductContext } from "../../../app/App";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
-);
+import handleCartCheckout from "../../checkout/utils/checkoutService";
 
 /**
  * Page that allows a user to add a product to their cart
@@ -46,100 +42,9 @@ const ProductPage = () => {
     fetchProductDetails();
   }, [id, selectedProduct, setSelectedProduct]);
 
-  // need to remove - creates some unintended behavior currently
-  // if (!selectedProduct) {
-  //   return <Navigate to="/" replace />;
-  // }
-
-  // Makes a POST request to our back end with our global cartList state
-  const handleCartCheckout = async () => {
-    try {
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error("Stripe failed to initialize");
-      }
-
-      // reject checkout attempt if cart is empty
-      if (!cartList || cartList.length === 0) {
-        console.error("Cart is empty");
-        return;
-      }
-
-      // Example cart items - in a real app, this would come from your shopping cart state
-      // Should we be creating a schema out of this or just use interfaces?
-      // May be able to send images to stripe checkout page, see https://docs.stripe.com/payments/checkout
-      // const cartItems = [
-      //   {
-      //     name: "Phone Stand",
-      //     amount: 1999, // $19.99 in cents
-      //     quantity: 1,
-      //   },
-      //   {
-      //     name: "Stanley Accessory",
-      //     amount: 2499, // $24.99 in cents
-      //     quantity: 2,
-      //   },
-      // ];
-
-      // Stripe only accepts these product properties
-      const stripeCartList = cartList.map((item) => ({
-        name: item.name,
-        amount: item.amount,
-        quantity: item.quantity,
-      }));
-
-      // Needed???
-      // round to avoid floating-point precision errors
-      // const amountInCents = Math.round(selectedProduct.price * 100);
-
-      const baseurl: string =
-        window.location.hostname !== "localhost"
-          ? "https://zach-ecommerce-backend.azurewebsites.net/product"
-          : "http://localhost:9191/product";
-
-      const response = await fetch(
-        // "https://zach-ecommerce-backend.azurewebsites.net/product/v1/cart/checkout",
-        // "http://localhost:9191/product/v1/cart/checkout",
-        `${baseurl}/v1/cart/checkout`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            items: stripeCartList,
-            currency: "usd",
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // Redirect to Stripe checkout using the session ID from the response
-      const result = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-    } catch (error) {
-      console.error("Error during checkout:", error);
-      // You might want to show an error message to the user here
-    }
-  };
-
+  // Should make an interface outta this
   // pushes the selectedProduct to our global cartList state with the selected quantity
   const addToCart = () => {
-    // Edge case not handled:
-    // right now selectedProduct exists only if navigated to through to homepage
-    // can selectedProduct exist if we navigate directly to '/products/1'?
     if (selectedProduct) {
       const cartItem = {
         id: selectedProduct.id,
@@ -233,8 +138,6 @@ const ProductPage = () => {
               Add to cart
             </button>
 
-            
-
             {/* off canvas slider */}
             <div
               className="offcanvas offcanvas-end bg-dark text-white"
@@ -276,7 +179,7 @@ const ProductPage = () => {
                 <button
                     type="button"
                     className="btn btn-primary btn-sm"
-                    onClick={() => handleCartCheckout()}
+                    onClick={() => handleCartCheckout(cartList)}
                   >
                     Checkout
                   </button>

@@ -1,45 +1,24 @@
 import { createContext, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Product, ProductContextType } from "../interfaces/productInterface";
+import { CartItem, CartListContextType } from "../interfaces/cartInterface";
 import HomePage from "../features/products/components/HomePage";
 import ProductPage from "../features/products/components/ProductPage";
-import CheckoutSuccessPage from "../features/products/components/CheckoutSuccessPage";
-import CheckoutCancelPage from "../features/products/components/CheckoutCancelPage";
+import CheckoutSuccessPage from "../features/checkout/components/CheckoutSuccessPage";
+import CheckoutCancelPage from "../features/checkout/components/CheckoutCancelPage";
+import CartPage from "../features/products/components/CartPage";
 
-interface Product {
-  id: number;
-  imgUrl: string;
-  descriptionShort: string;
-  descriptionLong: string | null;  // Optional field
-  price: number;
-  material: string | null;         // Optional field
-  size: string | null;            // Optional field
-}
-
-interface CartItem {
-  id: number;
-  name: string; // maps to product.descriptionShort
-  amount: number; // price in cents
-  quantity: number; // quantity in cart
-  imgUrl?: string; // optional field for UI display
-}
-
-interface ProductContextType {
-  selectedProduct: Product | null;
-  setSelectedProduct: (product: Product | null) => void;
-}
+// put in contextproviders file 
 export const ProductContext = createContext<ProductContextType | undefined>(
   undefined
 );
 
-interface CartListContextType {
-  cartList: CartItem[] | null;
-  setCartList: (cartItems: CartItem[] | null) => void;
-}
 export const CartListContext = createContext<CartListContextType | undefined>(
   undefined
 );
 
 function App() {
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartList, setCartList] = useState<CartItem[] | null>(null);
 
@@ -73,6 +52,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/products/:id" element={<ProductPage />} />
+              <Route path="/cart" element={<CartPage />} />
               <Route path="/success" element={<CheckoutSuccessPage />} />
               <Route path="/cancel" element={<CheckoutCancelPage />} />
             </Routes>

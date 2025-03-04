@@ -2,16 +2,7 @@ import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { ProductContext } from '../../../app/App';
 import { useNavigate } from 'react-router-dom';
-
-interface Product {
-  id: number;
-  imgUrl: string;
-  descriptionShort: string;
-  descriptionLong: string | null;  // Optional field
-  price: number;
-  material: string | null;         // Optional field
-  size: string | null;            // Optional field
-}
+import { Product } from '../../../interfaces/productInterface';
 
 /**
  * Component renders all products
