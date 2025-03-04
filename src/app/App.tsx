@@ -6,7 +6,7 @@ import HomePage from "../features/products/components/HomePage";
 import ProductPage from "../features/products/components/ProductPage";
 import CheckoutSuccessPage from "../features/checkout/components/CheckoutSuccessPage";
 import CheckoutCancelPage from "../features/checkout/components/CheckoutCancelPage";
-import CartPage from "../features/products/components/CartPage";
+import CartPage from "../features/checkout/components/CartPage";
 
 // put in contextproviders file 
 export const ProductContext = createContext<ProductContextType | undefined>(
