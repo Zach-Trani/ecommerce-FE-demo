@@ -164,17 +164,10 @@ const ProductPage = () => {
                 ></button>
               </div>
 
-              {/* refactor to only show selectedProduct------ */}
               {/* bug with quantity and cart subtotal - they dont display when you back arrow from stripe page */}
               <div className="offcanvas-body">
-                {/* {cartList?.map((product) => (
-                  <>
-                    <img src={product.imgUrl} />
-                    <div>{product.name}</div>
-                    <div>${product.amount / 100}</div>
-                    <div>Quantity: {product.quantity}</div>
-                  </>
-                ))} */}
+                
+                {/* show only currently viewed product in canvas slider */}
                 <>
                 {selectedProduct ? (
                   <>

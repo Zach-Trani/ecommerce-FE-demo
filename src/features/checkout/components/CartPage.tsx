@@ -4,7 +4,23 @@ import Navbar from "../../../components/Navbar";
 import handleCartCheckout from "../utils/checkoutService";
 
 const CartPage = () => {
-  const { cartList } = useContext(CartListContext)!;
+  const { cartList, setCartList } = useContext(CartListContext)!;
+  
+  // Generate quantity options (1-10)
+  const quantityOptions = Array.from({ length: 10 }, (_, i) => i + 1);
+  
+  // Handle quantity change by directly updating the global cartList
+  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    if (cartList) {
+      const updatedCart = cartList.map(item => {
+        if (item.id === productId) {
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+      setCartList(updatedCart);
+    }
+  };
 
   return (
     <div className="container-fluid d-flex justify-content-center py-4" style={{ minHeight: "100vh" }}>
@@ -39,10 +55,22 @@ const CartPage = () => {
               <span className="fs-5">{product.name}</span>
             </div>
 
+            {/* Quantity dropdown menu */}
             <div className="col-md-3">
               <div className="d-flex align-items-center">
                 <span className="me-2 fs-5">Quantity:</span>
-                <span className="badge bg-primary fs-6 px-3 py-2">{product.quantity}</span>
+                <select 
+                  className="form-select" 
+                  value={product.quantity}
+                  onChange={(e) => handleQuantityChange(product.id, Number(e.target.value))}
+                  style={{ width: "80px" }}
+                >
+                  {quantityOptions.map((qty) => (
+                    <option key={qty} value={qty}>
+                      {qty}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             
