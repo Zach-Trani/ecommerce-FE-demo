@@ -7,30 +7,106 @@ alwaysApply: false
 # Review the Project Changelog and Project Directory notes below for our Ecommerce App's React Typescript Front End. This front end interacts with a Spring Boot Back End.
 
 ## Project Changelog
+# Frontend Project Changelog
 
-v1.1 - created the bootstrap card in ProductList.tsx to display ecommerce data such as images, product names, prices
-v1.2 - created the page mount get request in ProductList.tsx to get all of our data from the azure database at the "/products" endpoint
-v1.3 - created global state with usecontext to allow users to select one of the products and open a new page that is ProductPage.tsx
-v1.4 - created the aethetics but not yet functional add to cart button that opens the bootstrap offcanvas in ProductPage.tsx
-v1.5 - created a checkout button that makes a post request to our backend stripe checkout service by sending a list of products where each product contains a name, quantity, and amount to the "product/v1/checkout" endpoint
-v1.6 - added cartList global state to persist products in a cart listenerCount, can now save cartList global state to local storage for offline data persistence
-v1.7 - added a quantity dropdown list for users to selected product quantity
-v1.8 - moved stripe checkout button into the offcanvas slider
+## Initial Setup and Core Infrastructure
+v1.0
+- Initialized React TypeScript project
+- Set up project structure and dependencies
+- Configured Bootstrap for styling
+- Established connection with Spring Boot backend
 
-## Project Directory
+## Module 1: Product Display and Navigation
+v1.1 - Product List Implementation
+- Created `ProductList.tsx` component
+- Implemented Bootstrap card layout for product display:
+  - Product image display
+  - Product name and price formatting
+  - Responsive grid layout
+- Added basic styling and hover effects
 
-src/
-├── app/                # Global state, providers, and config
-│   ├── App.js          # Main app entry, handles routes
-│   
-├── components/         # Reusable global components
-│   ├── Navbar.js       # Navigation bar
-│
-├── features/           # Feature-based modules
-│   ├── products/       # Product-related logic
-│   │   ├── components/
-│   │   │   ├── HomePage.js      # Displays all products
-│   │   │   ├── ProductPage.js   # Displays a single product along with stripe payment functionality
-│   │   │   ├── ProductList.js   # List of products
-│
-└── index.js           # Entry point of the app, renders App.js
+v1.2 - Data Fetching and Integration
+- Implemented API integration in `ProductList.tsx`:
+  - Added axios GET request to `/products` endpoint
+  - Created product interface definitions
+  - Implemented loading states and error handling
+- Set up data fetching on component mount
+
+## Module 2: State Management and Navigation
+v1.3 - Global State Implementation
+- Established global state management:
+  - Created `ProductContext` using React Context API
+  - Implemented `selectedProduct` state
+  - Added type definitions for context
+- Created `ProductPage.tsx` for individual product views
+- Implemented navigation between product list and detail views
+
+## Module 3: Shopping Cart Features
+v1.4 - Cart UI Implementation
+- Added Bootstrap Offcanvas component for cart display
+- Created "Add to Cart" button in `ProductPage.tsx`
+- Implemented cart slide-out animation
+- Added basic cart item display
+
+v1.5 - Checkout Integration
+- Implemented Stripe checkout functionality:
+  - Created checkout button component
+  - Added POST request to `/product/v1/checkout` endpoint
+  - Implemented product data formatting for Stripe
+  - Added checkout success/failure handling
+
+v1.6 - Cart State Management
+- Enhanced cart functionality:
+  - Created `CartContext` for global cart state
+  - Implemented local storage persistence
+  - Added cart update methods
+  - Created cart item interface definitions
+
+v1.7 - Product Quantity Management
+- Added quantity selection features:
+  - Implemented dropdown component for quantity selection
+  - Created quantity state management
+  - Added quantity validation
+  - Updated cart total calculations
+
+v1.8 - Cart UI Enhancements
+- Refined cart interface:
+  - Moved checkout button to Offcanvas
+  - Enhanced cart item display
+  - Added cart total calculations
+  - Improved mobile responsiveness
+
+## Current Features
+- Responsive product grid display
+- Individual product detail pages
+- Shopping cart with quantity management
+- Local storage persistence
+- Stripe checkout integration
+- Global state management
+- Bootstrap styling and animations
+
+## Component Architecture
+1. App.tsx (Root component)
+   - Global context providers
+   - Routing configuration
+2. ProductList.tsx
+   - Product grid display
+   - Data fetching
+3. ProductPage.tsx
+   - Product details
+   - Add to cart functionality
+4. CartPage.tsx
+   - Cart management
+   - Checkout integration
+
+## State Management
+- ProductContext: Manages selected product state
+- CartContext: Manages shopping cart state
+- Local Storage: Persists cart data
+- Component-level state: Manages UI interactions
+
+## UI Framework
+- Bootstrap components
+- Custom styling
+- Responsive design
+- Offcanvas implementations
