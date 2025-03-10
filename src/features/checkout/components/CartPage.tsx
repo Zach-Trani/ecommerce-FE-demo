@@ -1,10 +1,11 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartListContext } from "../../../app/App";
 import Navbar from "../../../components/Navbar";
-import handleCartCheckout from "../utils/checkoutService";
 
 const CartPage = () => {
   const { cartList, setCartList } = useContext(CartListContext)!;
+  const navigate = useNavigate();
   
   // Generate quantity options (1-10)
   const quantityOptions = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -21,6 +22,10 @@ const CartPage = () => {
       setCartList(updatedCart);
     }
   };
+
+  const handleCheckoutNavigate = () => {
+    navigate('/checkout')
+  }
 
   return (
     <div className="container-fluid d-flex justify-content-center py-4" style={{ minHeight: "100vh" }}>
@@ -96,7 +101,11 @@ const CartPage = () => {
             <h3 className="text-primary mb-4">
               ${(cartList?.reduce((acc, item) => acc + (item.amount * item.quantity) / 100, 0) || 0).toFixed(2)}
             </h3>
-            <button type="button" className="btn btn-primary btn-lg w-100" onClick={() => handleCartCheckout(cartList)}>Proceed to Checkout</button>
+
+            {/* this needs to redirect to /checkout */}
+            <button type="button" className="btn btn-primary btn-lg w-100" onClick={handleCheckoutNavigate}>Proceed to Checkout</button>
+          
+          
           </div>
         </div>
       </div>
