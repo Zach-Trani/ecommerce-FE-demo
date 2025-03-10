@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CartListContext, ProductContext } from "../../../app/App";
-import handleCartCheckout from "../../checkout/utils/checkoutService";
 import Navbar from "../../../components/Navbar";
 
 /**
@@ -11,13 +10,12 @@ import Navbar from "../../../components/Navbar";
  */
 const ProductPage = () => {
   const { id } = useParams(); // gets product id from URL
-  const { selectedProduct, setSelectedProduct } = useContext(ProductContext)!; // global state tracking currently viewed product
-  const { cartList, setCartList } = useContext(CartListContext)!; // global state tracking list of products
-  const [selectedQuantity, setSelectedQuantity] = useState(1); // local state tracking product qty
+  const { selectedProduct, setSelectedProduct } = useContext(ProductContext)!;
+  const { cartList, setCartList } = useContext(CartListContext)!;
+  const [selectedQuantity, setSelectedQuantity] = useState(1); 
   const navigate = useNavigate();
 
-  // selectedProduct global state only exists when a product is clicked from HomePage.tsx,
-  // this manually updates the state if a user directly navigates to '/product/1'
+  // Fetch product data if needed
   useEffect(() => {
     const fetchProductDetails = async () => {
       if (!selectedProduct && id) {
@@ -36,7 +34,6 @@ const ProductPage = () => {
           setSelectedProduct(productData);
         } catch (error) {
           console.error("Error fetching product details:", error);
-        } finally {
         }
       }
     };
@@ -44,42 +41,35 @@ const ProductPage = () => {
     fetchProductDetails();
   }, [id, selectedProduct, setSelectedProduct]);
 
-  // Should make an interface outta this
-  // pushes the selectedProduct to our global cartList state with the selected quantity
   const addToCart = () => {
     if (selectedProduct) {
       if (!selectedProduct.id) {
         console.error(`Product ${selectedProduct.descriptionShort} has no ID, cannot add to cart`);
-        return; // Prevent adding products without IDs
+        return;
       }
       
       const cartItem = {
         id: selectedProduct.id,
         name: selectedProduct.descriptionShort,
-        amount: Math.round(selectedProduct.price * 100), // Convert to cents
-        quantity: selectedQuantity, // Use the selected quantity
+        amount: Math.round(selectedProduct.price * 100),
+        quantity: selectedQuantity,
         imgUrl: selectedProduct.imgUrl,
       };
 
-      // Log to verify ID is present
       console.log(`Adding to cart: ${cartItem.name} with ID: ${cartItem.id}`);
 
-      // If cart is empty, initialize it
       if (!cartList) {
         setCartList([cartItem]);
       } else {
-        // Check if product already exists in cart
         const existingItemIndex = cartList.findIndex(
           (item) => item.id === selectedProduct.id
         );
 
         if (existingItemIndex >= 0) {
-          // selectedProduct is already in cart, update with new quantity
           const updatedCart = [...cartList];
           updatedCart[existingItemIndex].quantity += selectedQuantity;
           setCartList(updatedCart);
         } else {
-          // new product in list, add to cart
           setCartList([...cartList, cartItem]);
         }
       }
@@ -87,132 +77,169 @@ const ProductPage = () => {
   };
 
   const handleCartDisplay = () => {
-    navigate(`/cart`)
+    navigate(`/cart`);
+  }
+  
+  const handleCheckoutNavigate = () => {
+    navigate('/checkout');
   }
 
   // Generate quantity options for dropdown (1-10)
   const quantityOptions = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
-    
-    <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
-      
-      <div
-        className="container-fluid p-3 mb-2 bg-secondary text-white"
-        style={{ maxWidth: "1200px" }}
-      >
+    <div className="container-fluid d-flex justify-content-center py-4" style={{ minHeight: "100vh" }}>
+      <div className="bg-light shadow rounded" style={{ width: "75vw", padding: "40px" }}>
         <Navbar />
-        <div className="row">
-          <div className="col-md-8">
-            <div className="container mt-4">
-              <div className="card p-3 mb-2 bg-dark text-white">
-                <img
-                  src={selectedProduct?.imgUrl}
-                  className="card-img-top"
-                  alt={selectedProduct?.descriptionShort}
-                />
+        
+        <div className="row mt-4">
+          {/* Product Image Column */}
+          <div className="col-md-7">
+            <div className="card border-0 shadow-sm mb-4">
+              <img
+                src={selectedProduct?.imgUrl}
+                className="card-img-top"
+                alt={selectedProduct?.descriptionShort}
+                style={{ objectFit: "contain", height: "400px" }}
+              />
+            </div>
+          </div>
+          
+          {/* Product Details Column */}
+          <div className="col-md-5">
+            <div className="card border-0 shadow-sm">
+              <div className="card-body">
+                <h2 className="card-title mb-3">{selectedProduct?.descriptionLong}</h2>
+                <h4 className="card-subtitle mb-4 text-primary fw-bold">
+                  ${selectedProduct?.price}
+                </h4>
                 
+                <p className="card-text mb-4">{selectedProduct?.descriptionLong}</p>
+                
+                {/* Product attributes if available */}
+                {selectedProduct?.material && (
+                  <p className="card-text">
+                    <span className="fw-bold">Material:</span> {selectedProduct.material}
+                  </p>
+                )}
+                
+                {selectedProduct?.size && (
+                  <p className="card-text">
+                    <span className="fw-bold">Size:</span> {selectedProduct.size}
+                  </p>
+                )}
+                
+                {/* Quantity selector */}
+                <div className="mb-4">
+                  <label htmlFor="quantityDropdown" className="form-label fw-bold">Quantity:</label>
+                  <select 
+                    className="form-select" 
+                    id="quantityDropdown"
+                    value={selectedQuantity}
+                    onChange={(e) => setSelectedQuantity(Number(e.target.value))}
+                  >
+                    {quantityOptions.map((qty) => (
+                      <option key={qty} value={qty}>
+                        {qty}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Add to cart button */}
+                <button
+                  className="btn btn-primary w-100 py-2"
+                  type="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight"
+                  onClick={addToCart}
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           </div>
-          {/* Offcanvas side bar to display shopping cart */}
-          <div className="col-md-4 mb-2 bg-dark text-white">
-            
-          <div className="card-body">
-                  <h2 className="card-title">
-                    {selectedProduct?.descriptionLong}
-                  </h2>
-                  <p className="card-text">Price: ${selectedProduct?.price}</p>
-                </div>
-
-            {/* Quantity dropdown */}
-            <div className="mb-3">
-              <label htmlFor="quantityDropdown" className="form-label">Quantity:</label>
-              <select 
-                className="form-select" 
-                id="quantityDropdown"
-                value={selectedQuantity}
-                onChange={(e) => setSelectedQuantity(Number(e.target.value))}
-              >
-                {quantityOptions.map((qty) => (
-                  <option key={qty} value={qty}>
-                    {qty}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* add to cart button */}
+        </div>
+        
+        {/* Off canvas slider */}
+        <div
+          className="offcanvas offcanvas-end bg-light shadow-sm"
+          tabIndex={-1}
+          id="offcanvasRight"
+          aria-labelledby="offcanvasRightLabel"
+        >
+          <div className="offcanvas-header border-bottom">
+            <h5 id="offcanvasRightLabel" className="fw-bold">Added to Cart!</h5>
             <button
-              className="btn btn-light"
               type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasRight"
-              aria-controls="offcanvasRight"
-              onClick={addToCart}
-            >
-              Add to cart
-            </button>
+              className="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
 
-            {/* off canvas slider */}
-            <div
-              className="offcanvas offcanvas-end bg-dark text-white"
-              tabIndex={-1}
-              id="offcanvasRight"
-              aria-labelledby="offcanvasRightLabel"
-            >
-              <div className="offcanvas-header">
-                <h5 id="offcanvasRightLabel">Added to Cart!</h5>
-                <button
-                  type="button"
-                  className="btn-close btn-close-white"
-                  data-bs-dismiss="offcanvas"
-                  aria-label="Close"
-                ></button>
+          <div className="offcanvas-body">
+            {/* Product in cart */}
+            {selectedProduct ? (
+              <div className="card border-0 mb-4">
+                <div className="row g-0">
+                  <div className="col-4">
+                    <img 
+                      src={selectedProduct.imgUrl} 
+                      className="img-fluid rounded"
+                      alt={selectedProduct.descriptionShort}
+                    />
+                  </div>
+                  <div className="col-8">
+                    <div className="card-body">
+                      <h5 className="card-title">{selectedProduct.descriptionShort}</h5>
+                      <p className="card-text">${selectedProduct.price}</p>
+                      <p className="card-text">Quantity: {selectedQuantity}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              {/* bug with quantity and cart subtotal - they dont display when you back arrow from stripe page */}
-              <div className="offcanvas-body">
-                
-                {/* show only currently viewed product in canvas slider */}
-                <>
-                {selectedProduct ? (
-                  <>
-                    <img src={selectedProduct.imgUrl} />
-                    <div>{selectedProduct.descriptionShort}</div>
-                    <div>${selectedProduct.price}</div>
-                    <div>Quantity: {selectedQuantity}</div>
-                  </>
-                ) : (
-                  <div>No product selected</div>
-                )}
-                </>
-                {/* cart subtotal calculation */}
-                <div>
-                  Cart Subtotal (
-                  {cartList?.reduce((acc, item) => acc + item.quantity, 0) || 0}{" "}
-                  items): $
-                  {(cartList?.reduce(
+            ) : (
+              <div className="text-center py-5">
+                <p className="fs-5">No product selected</p>
+              </div>
+            )}
+            
+            {/* Cart subtotal calculation */}
+            <div className="card border-0 bg-light mt-4 mb-4">
+              <div className="card-body">
+                <h5 className="card-title">Cart Summary</h5>
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Items:</span>
+                  <span>{cartList?.reduce((acc, item) => acc + item.quantity, 0) || 0}</span>
+                </div>
+                <div className="d-flex justify-content-between fw-bold">
+                  <span>Subtotal:</span>
+                  <span>${(cartList?.reduce(
                     (acc, item) => acc + (item.amount * item.quantity) / 100,
                     0
-                  ) || 0).toFixed(2)}
+                  ) || 0).toFixed(2)}</span>
                 </div>
-                
-                <button
-                    type="button"
-                    className="btn btn-primary btn-sm"
-                    onClick={handleCartDisplay}
-                  >
-                    View Cart
-                  </button>
-                <button
-                    type="button"
-                    className="btn btn-primary btn-sm"
-                    onClick={() => handleCartCheckout(cartList)}
-                  >
-                    Checkout
-                  </button>
               </div>
+            </div>
+            
+            {/* Action buttons */}
+            <div className="d-grid gap-2">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={handleCartDisplay}
+              >
+                View Cart
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleCheckoutNavigate}
+              >
+                Proceed to Checkout
+              </button>
             </div>
           </div>
         </div>
