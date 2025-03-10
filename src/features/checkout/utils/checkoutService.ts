@@ -22,11 +22,24 @@ const handleCartCheckout = async (cartList : CartItem[] | null) => {
     }
 
     // Stripe only accepts these product properties
-    const stripeCartList = cartList.map((item) => ({
-      name: item.name,
-      amount: item.amount,
-      quantity: item.quantity,
-    }));
+    const stripeCartList = cartList.map((item, index) => {
+      if (!item.id) {
+        console.warn(`Item at index ${index} (${item.name}) is missing an ID`);
+        // You could add some fallback ID here or skip the item
+      }
+      
+      return {
+        name: item.name,
+        amount: item.amount,
+        quantity: item.quantity,
+        productId: item.id || null // Explicitly set to null if missing
+      };
+    });
+    
+    // Log the stripeCartList to verify product IDs
+    console.log("Stripe Cart List:", stripeCartList);
+    // Add a delay before redirecting
+  await new Promise(resolve => setTimeout(resolve, 20000)); // 2 seconds delay
 
     const baseurl: string =
       window.location.hostname !== "localhost"

@@ -48,6 +48,11 @@ const ProductPage = () => {
   // pushes the selectedProduct to our global cartList state with the selected quantity
   const addToCart = () => {
     if (selectedProduct) {
+      if (!selectedProduct.id) {
+        console.error(`Product ${selectedProduct.descriptionShort} has no ID, cannot add to cart`);
+        return; // Prevent adding products without IDs
+      }
+      
       const cartItem = {
         id: selectedProduct.id,
         name: selectedProduct.descriptionShort,
@@ -56,25 +61,27 @@ const ProductPage = () => {
         imgUrl: selectedProduct.imgUrl,
       };
 
+      // Log to verify ID is present
+      console.log(`Adding to cart: ${cartItem.name} with ID: ${cartItem.id}`);
+
       // If cart is empty, initialize it
       if (!cartList) {
         setCartList([cartItem]);
-        return;
-      }
-
-      // Check if product already exists in cart
-      const existingItemIndex = cartList.findIndex(
-        (item) => item.id === selectedProduct.id
-      );
-
-      if (existingItemIndex >= 0) {
-        // selectedProduct is already in cart, update with new quantity
-        const updatedCart = [...cartList];
-        updatedCart[existingItemIndex].quantity += selectedQuantity;
-        setCartList(updatedCart);
       } else {
-        // new product in list, add to cart
-        setCartList([...cartList, cartItem]);
+        // Check if product already exists in cart
+        const existingItemIndex = cartList.findIndex(
+          (item) => item.id === selectedProduct.id
+        );
+
+        if (existingItemIndex >= 0) {
+          // selectedProduct is already in cart, update with new quantity
+          const updatedCart = [...cartList];
+          updatedCart[existingItemIndex].quantity += selectedQuantity;
+          setCartList(updatedCart);
+        } else {
+          // new product in list, add to cart
+          setCartList([...cartList, cartItem]);
+        }
       }
     }
   };
