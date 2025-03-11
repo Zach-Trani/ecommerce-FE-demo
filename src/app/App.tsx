@@ -7,6 +7,7 @@ import ProductPage from "../features/products/components/ProductPage";
 import CheckoutSuccessPage from "../features/checkout/components/CheckoutSuccessPage";
 import CheckoutCancelPage from "../features/checkout/components/CheckoutCancelPage";
 import CartPage from "../features/checkout/components/CartPage";
+import CheckoutInformation from "../features/checkout/components/CheckoutInformation";
 
 // put in contextproviders file 
 export const ProductContext = createContext<ProductContextType | undefined>(
@@ -53,6 +54,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/products/:id" element={<ProductPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutInformation />} />
               <Route path="/success" element={<CheckoutSuccessPage />} />
               <Route path="/cancel" element={<CheckoutCancelPage />} />
             </Routes>

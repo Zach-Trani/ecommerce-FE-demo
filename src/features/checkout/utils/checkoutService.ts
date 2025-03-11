@@ -37,9 +37,9 @@ const handleCartCheckout = async (cartList : CartItem[] | null) => {
     });
     
     // Log the stripeCartList to verify product IDs
-    console.log("Stripe Cart List:", stripeCartList);
+    // console.log("Stripe Cart List:", stripeCartList);
     // Add a delay before redirecting
-  await new Promise(resolve => setTimeout(resolve, 20000)); // 2 seconds delay
+  // await new Promise(resolve => setTimeout(resolve, 20000)); // 2 seconds delay
 
     const baseurl: string =
       window.location.hostname !== "localhost"
