@@ -1,5 +1,5 @@
 ---
-description: Guidelines for project
+description: Guidelines for pr
 globs: *.tsx, *.json, *.ts, *.css
 alwaysApply: false
 ---
