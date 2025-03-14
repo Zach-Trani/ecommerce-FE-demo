@@ -39,9 +39,14 @@ const CheckoutInformation = () => {
       alert("Please fill in all required fields");
       return;
     }
+
+    const baseurl: string =
+      window.location.hostname === "localhost"
+        ? "http://localhost:9191/checkout"
+        : "https://zach-ecommerce-backend.azurewebsites.net/checkout";
     
     // POST customer info to database
-    fetch('/api/customers', {
+    fetch(baseurl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
