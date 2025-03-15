@@ -41,6 +41,32 @@ const ProductPage = () => {
     fetchProductDetails();
   }, [id, selectedProduct, setSelectedProduct]);
 
+  // Fix for offcanvas scroll issue: remove Bootstrap's modal-backdrop and cleanup body classes
+  useEffect(() => {
+    // This runs when component mounts
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+    
+    // Remove any lingering backdrop elements
+    const backdrop = document.querySelector('.modal-backdrop, .offcanvas-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+    
+    // This runs when component unmounts (when we navigate to another page) - cleanup
+    return () => {
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+      
+      const backdrop = document.querySelector('.modal-backdrop, .offcanvas-backdrop');
+      if (backdrop) {
+        backdrop.remove();
+      }
+    };
+  }, []);
+
   const addToCart = () => {
     if (selectedProduct) {
       if (!selectedProduct.id) {
@@ -77,10 +103,44 @@ const ProductPage = () => {
   };
 
   const handleCartDisplay = () => {
+    // First clean up Bootstrap offcanvas effects
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+    
+    // Make sure the offcanvas is closed before navigating
+    const offcanvasElement = document.getElementById('offcanvasRight');
+    if (offcanvasElement) {
+      const bsWindow = window as any;
+      if (bsWindow.bootstrap && bsWindow.bootstrap.Offcanvas) {
+        const offcanvasInstance = bsWindow.bootstrap.Offcanvas.getInstance(offcanvasElement);
+        if (offcanvasInstance) {
+          offcanvasInstance.hide();
+        }
+      }
+    }
+    
     navigate(`/cart`);
   }
   
   const handleCheckoutNavigate = () => {
+    // First clean up Bootstrap offcanvas effects
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+    
+    // Make sure the offcanvas is closed before navigating
+    const offcanvasElement = document.getElementById('offcanvasRight');
+    if (offcanvasElement) {
+      const bsWindow = window as any;
+      if (bsWindow.bootstrap && bsWindow.bootstrap.Offcanvas) {
+        const offcanvasInstance = bsWindow.bootstrap.Offcanvas.getInstance(offcanvasElement);
+        if (offcanvasInstance) {
+          offcanvasInstance.hide();
+        }
+      }
+    }
+    
     navigate('/checkout');
   }
 
