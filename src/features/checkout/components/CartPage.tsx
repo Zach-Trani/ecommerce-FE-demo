@@ -37,7 +37,7 @@ const CartPage = () => {
         
         {/* cart items header row */}
         <div className="row mb-3 fw-bold border-bottom pb-3">
-          <div className="col-md-3">Category</div>
+          {/* <div className="col-md-3">Category</div> */}
           <div className="col-md-3">Product</div>
           <div className="col-md-3">Quantity</div>
           <div className="col-md-3">Price</div>
@@ -46,9 +46,9 @@ const CartPage = () => {
         {/* cart list display */}
         {cartList?.map((product) => (
           <div className="row py-4 border-bottom align-items-center" key={product.id}>
-            <div className="col-md-3 text-muted">
+            {/* <div className="col-md-3 text-muted">
               Category
-            </div>
+            </div> */}
 
             <div className="col-md-3 d-flex align-items-center">
               <img 
@@ -81,6 +81,10 @@ const CartPage = () => {
             
             <div className="col-md-3">
               <span className="fw-bold fs-4">${(product.amount / 100).toFixed(2)}</span>
+            </div>
+
+            <div className="col-md-3 text-muted">
+              <button>x</button>
             </div>
           </div>
         ))}

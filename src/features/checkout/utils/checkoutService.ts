@@ -2,7 +2,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CartItem } from "../../../interfaces/cartInterface";
 
 const stripePromise = loadStripe(
-  "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
+  // stripe general requests - public live key
+  "pk_live_51Qmf3WP1hpgVltNEg69YToNLOIypdkjsYzQkIM0pq5SGpEnle2S9lpAidvMsfHeB8gNeX9JcoCVVUmniHbExsCYz00SV5oNLXX"
+  // stripe general requests - public test key
+  // "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
 );
 
 // This should become its own component (used in ProductPage & CartPage)
