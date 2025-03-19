@@ -27,6 +27,19 @@ const CartPage = () => {
     navigate('/checkout')
   }
 
+  // remove a cartItem from cartList global state by product id
+  const handleRemoveItem = (id: number) => {
+    // explicit check if cartList exists
+    if (cartList) {
+      const index = cartList.findIndex(item => item.id === id);
+      if (index > -1) {
+        // create an intermediary list for react to detect changes
+        const updatedCart = cartList.filter((_, i) => i !== index);
+        setCartList(updatedCart);
+      }
+    }
+  }
+
   return (
     <div className="container-fluid d-flex justify-content-center py-4" style={{ minHeight: "100vh" }}>
       
@@ -37,20 +50,15 @@ const CartPage = () => {
         
         {/* cart items header row */}
         <div className="row mb-3 fw-bold border-bottom pb-3">
-          <div className="col-md-3">Category</div>
-          <div className="col-md-3">Product</div>
+          <div className="col-md-5 ps-4">Product</div>
           <div className="col-md-3">Quantity</div>
-          <div className="col-md-3">Price</div>
+          <div className="col-md-2">Price</div>
         </div>
         
         {/* cart list display */}
         {cartList?.map((product) => (
           <div className="row py-4 border-bottom align-items-center" key={product.id}>
-            <div className="col-md-3 text-muted">
-              Category
-            </div>
-
-            <div className="col-md-3 d-flex align-items-center">
+            <div className="col-md-5 d-flex align-items-center ps-4">
               <img 
                 src={product.imgUrl} 
                 alt={product.name} 
@@ -79,8 +87,18 @@ const CartPage = () => {
               </div>
             </div>
             
-            <div className="col-md-3">
+            <div className="col-md-2">
               <span className="fw-bold fs-4">${(product.amount / 100).toFixed(2)}</span>
+            </div>
+
+            <div className="col-md-2 text-end pe-4">
+              <button 
+                onClick={() => handleRemoveItem(product.id)} 
+                className="btn btn-sm btn-outline-secondary rounded-pill px-3" 
+                title="Remove item"
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}

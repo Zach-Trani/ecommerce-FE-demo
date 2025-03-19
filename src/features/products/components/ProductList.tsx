@@ -42,18 +42,23 @@ const ProductList = () => {
   };
 
   return (
-    <div style={{ width: "75vw", padding: "40px" }}>
-      <h1>Lively Moss is a ecommerce stop for all things 3D printed!</h1>
-      <div className="bg-light shadow rounded row row-cols-2 row-cols-md-3 g-4">
+    <>
+    <div className="container bg-light shadow rounded" style={{ padding: "40px" }}>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
         {products.map((product: Product) => (
           <div
-            className="col"
+            className="col mb-4 d-flex justify-content-center"
             key={product.id}
             onClick={() => handleProductClick(product)}
             style={{ cursor: "pointer" }}
           >
-            <div className="card h-100">
-              <img src={product.imgUrl} className="card-img-top" alt="..." />
+            <div className="card h-100" style={{ width: "100%", maxWidth: "465px" }}>
+              <img 
+                src={product.imgUrl} 
+                className="card-img-top" 
+                alt={product.descriptionShort}
+                style={{ objectFit: "contain", height: "620px" }} 
+              />
               <div className="card-body">
                 <h5 className="card-title">
                   {product.descriptionShort.toString()}
@@ -67,8 +72,10 @@ const ProductList = () => {
           </div>
         ))}
       </div>
-      <p>© 2025 | Zachary Trani</p>
+      
     </div>
+    <p className="py-3 mt-4 text-center">© 2025 | Zachary Trani</p>
+    </>
   );
 };
 
