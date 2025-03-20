@@ -11,6 +11,11 @@
 # production
 /build
 
+# Cursor IDE rules
+*.mdc
+front-end-rules.mdc
+cursor-rules/
+
 # misc
 .DS_Store
 .env
