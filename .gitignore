@@ -17,6 +17,7 @@ front-end-rules.mdc
 cursor-rules/
 
 # misc
+*.cursor
 .DS_Store
 .env
 .env.local
