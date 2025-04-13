@@ -324,7 +324,7 @@ const CheckoutInformation = () => {
                         {cartList
                           .reduce(
                             (acc, item) =>
-                              acc + (Order #: insert number hereitem.amount * item.quantity) / 100,
+                              acc + (item.amount * item.quantity) / 100,
                             0
                           )
                           .toFixed(2)}
