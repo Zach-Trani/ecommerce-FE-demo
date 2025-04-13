@@ -43,7 +43,7 @@ const CartPage = () => {
   return (
     <div className="container-fluid d-flex justify-content-center py-4" style={{ minHeight: "100vh" }}>
       
-      {/* Main container - explicitly 75% of viewport width */}
+      {/* Main container at 75% of viewport width */}
       <div className="bg-light shadow rounded" style={{ width: "75vw", padding: "40px" }}>
       <Navbar />
         <h2 className="mb-4">Your Cart</h2>
@@ -130,5 +130,4 @@ const CartPage = () => {
     </div>
   );
 };
-
 export default CartPage;

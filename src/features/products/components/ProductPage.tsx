@@ -15,7 +15,7 @@ const ProductPage = () => {
   const [selectedQuantity, setSelectedQuantity] = useState(1); 
   const navigate = useNavigate();
 
-  // Fetch product data if needed
+  // fallback api request if global state didn't pass correctly - remake the req to the individual product in '/products' using the url id
   useEffect(() => {
     const fetchProductDetails = async () => {
       if (!selectedProduct && id) {
@@ -31,7 +31,7 @@ const ProductPage = () => {
           }
 
           const productData = await response.json();
-          setSelectedProduct(productData);
+          setSelectedProduct(productData); // reset the global state
         } catch (error) {
           console.error("Error fetching product details:", error);
         }
@@ -67,6 +67,7 @@ const ProductPage = () => {
     };
   }, []);
 
+  // build cartItem using cents to fit Stripe's api format, round to nearest cent
   const addToCart = () => {
     if (selectedProduct) {
       if (!selectedProduct.id) {
@@ -82,11 +83,10 @@ const ProductPage = () => {
         imgUrl: selectedProduct.imgUrl,
       };
 
-      console.log(`Adding to cart: ${cartItem.name} with ID: ${cartItem.id}`);
-
       if (!cartList) {
         setCartList([cartItem]);
       } else {
+        // check if product to be added is in cartList already, return fist matching index if exists
         const existingItemIndex = cartList.findIndex(
           (item) => item.id === selectedProduct.id
         );
@@ -307,5 +307,4 @@ const ProductPage = () => {
     </div>
   );
 };
-
 export default ProductPage;

@@ -4,7 +4,6 @@ import { CartListContext } from "../../../app/App";
 import Navbar from "../../../components/Navbar";
 import { CustomerInformation } from "../../../interfaces/customerInterface";
 
-
 const CheckoutInformation = () => {
   const { cartList } = useContext(CartListContext)!; // global state tracking list of products
   
@@ -325,7 +324,7 @@ const CheckoutInformation = () => {
                         {cartList
                           .reduce(
                             (acc, item) =>
-                              acc + (item.amount * item.quantity) / 100,
+                              acc + (Order #: insert number hereitem.amount * item.quantity) / 100,
                             0
                           )
                           .toFixed(2)}

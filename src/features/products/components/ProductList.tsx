@@ -17,7 +17,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Use a ternary operator to set the base URL
+    // ternary operator to set the base URL
     const baseurl: string =
       window.location.hostname !== "localhost"
         ? "https://zach-ecommerce-backend.azurewebsites.net/products"
@@ -27,7 +27,6 @@ const ProductList = () => {
     const getProducts = async () => {
       try {
         const response = await axios.get(baseurl);
-        console.log(response.data);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);

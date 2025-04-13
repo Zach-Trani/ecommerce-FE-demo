@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+// to do: create unique order ID, hashing function to decode it into its matching sales transaction ID
 const CheckoutSuccessPage = () => {
     const navigate = useNavigate()
 
@@ -17,5 +18,4 @@ const CheckoutSuccessPage = () => {
         </div>
     )
 }
-
 export default CheckoutSuccessPage;

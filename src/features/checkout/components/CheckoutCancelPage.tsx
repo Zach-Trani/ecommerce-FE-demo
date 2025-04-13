@@ -16,5 +16,4 @@ const CheckoutCancelPage = () => {
         </div>
     )
 }
-
 export default CheckoutCancelPage;

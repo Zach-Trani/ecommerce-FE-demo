@@ -23,22 +23,20 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartList, setCartList] = useState<CartItem[] | null>(null);
 
-  // on page mount - load cartList into global state from local storage
+  // Page Mount Effect - load cartList into global state from local storage
   useEffect(() => {
     const savedCart = localStorage.getItem('cartList');
     if (savedCart) {
       try {
-        const parsedCart = JSON.parse(savedCart);
+        const parsedCart = JSON.parse(savedCart); // JSON.stringify: converts objs/arrs to strings for storage, JSON.parse: converts strings back to useable objs/arrs
         setCartList(parsedCart);
-        console.log('local storage retrieved!')
       } catch (error) {
-        console.error('Error parsing saved cart:', error);
         localStorage.removeItem('cartList');
       }
     }
   }, [])
 
-  // on cartList state update - save to local storage for offline data persisentce
+  // Global Context Effect - cartList change: save to local storage for offline data persisentce
   useEffect(() => {
     if (cartList && cartList.length > 0) {
       localStorage.setItem('cartList', JSON.stringify(cartList));
@@ -46,6 +44,7 @@ function App() {
     }
   }, [cartList]);
 
+  // React router routes & context providers
   return (
       <CartListContext.Provider value={{ cartList, setCartList }}>
         <ProductContext.Provider value={{ selectedProduct, setSelectedProduct }}>
@@ -63,5 +62,4 @@ function App() {
       </CartListContext.Provider>
   );
 }
-
 export default App;

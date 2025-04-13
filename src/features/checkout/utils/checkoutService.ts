@@ -2,13 +2,14 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CartItem } from "../../../interfaces/cartInterface";
 
 const stripePromise = loadStripe(
+
+  // NOTE: these are safe to display in browser per Stripe, they create payment intents, and are different from secret keys
   // stripe general requests - public live key
   "pk_live_51Qmf3WP1hpgVltNEg69YToNLOIypdkjsYzQkIM0pq5SGpEnle2S9lpAidvMsfHeB8gNeX9JcoCVVUmniHbExsCYz00SV5oNLXX"
   // stripe general requests - public test key
   // "pk_test_51Qmf3WP1hpgVltNEYypXIUyCVP8h4QXrz3UBypyFzkz1jztzyJR7FOF8MWlC7Lxw3D4hO6BUwXEKJ2yENhevz4HG00cMrlk8J5"
 );
 
-// This should become its own component (used in ProductPage & CartPage)
 // Makes a POST request to our back end with our global cartList state
 const handleCartCheckout = async (cartList : CartItem[] | null) => {
 
@@ -28,7 +29,6 @@ const handleCartCheckout = async (cartList : CartItem[] | null) => {
     const stripeCartList = cartList.map((item, index) => {
       if (!item.id) {
         console.warn(`Item at index ${index} (${item.name}) is missing an ID`);
-        // You could add some fallback ID here or skip the item
       }
       
       return {
@@ -78,7 +78,6 @@ const handleCartCheckout = async (cartList : CartItem[] | null) => {
     }
   } catch (error) {
     console.error("Error during checkout:", error);
-    // You might want to show an error message to the user here
   }
 };
 

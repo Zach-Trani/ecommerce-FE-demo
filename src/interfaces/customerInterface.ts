@@ -1,3 +1,4 @@
+// CustomerInformation to be posted to our database - see in front end form intake in "/checkout"
 export interface CustomerInformation {
     email: string;
     country: string;
