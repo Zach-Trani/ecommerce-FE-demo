@@ -5,9 +5,10 @@ import Navbar from "../../../components/Navbar";
 import { CustomerInformation } from "../../../interfaces/customerInterface";
 
 const CheckoutInformation = () => {
-  const { cartList } = useContext(CartListContext)!; // global state tracking list of products
+  // Global state
+  const { cartList } = useContext(CartListContext)!;
   
-  // State object for customer information form
+  // Local state
   const [customerInfo, setCustomerInfo] = useState<CustomerInformation>({
     email: "",
     country: "",
@@ -270,7 +271,8 @@ const CheckoutInformation = () => {
                           placeholder="ZIP"
                           value={customerInfo.zipCode}
                           onChange={handleInputChange}
-                          required
+                          required              <Route path="/checkout" element={<CheckoutInformation />} />
+
                         />
                       </div>
                     </div>

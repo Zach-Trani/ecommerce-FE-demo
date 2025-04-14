@@ -9,13 +9,14 @@ import { Product } from "../../../interfaces/productInterface";
  * @returns Product card
  */
 const ProductList = () => {
-  // user selected product global state
+  // Global State
   const { setSelectedProduct } = useContext(ProductContext)!;
-  const navigate = useNavigate();
-
-  // all products request state
+    // Local State
   const [products, setProducts] = useState([]);
 
+  const navigate = useNavigate();
+
+  // On page mount - get all products
   useEffect(() => {
     // ternary operator to set the base URL
     const baseurl: string =

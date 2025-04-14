@@ -9,11 +9,14 @@ import Navbar from "../../../components/Navbar";
  * @returns
  */
 const ProductPage = () => {
-  const { id } = useParams(); // gets product id from URL
+  // Global State
   const { selectedProduct, setSelectedProduct } = useContext(ProductContext)!;
   const { cartList, setCartList } = useContext(CartListContext)!;
-  const [selectedQuantity, setSelectedQuantity] = useState(1); 
+  // Local State
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
   const navigate = useNavigate();
+  const { id } = useParams(); // gets product id from URL
 
   // fallback api request if global state didn't pass correctly - remake the req to the individual product in '/products' using the url id
   useEffect(() => {
@@ -39,7 +42,7 @@ const ProductPage = () => {
     };
 
     fetchProductDetails();
-  }, [id, selectedProduct, setSelectedProduct]);
+  }, [id, selectedProduct, setSelectedProduct]); // <-- rework this dependency logic, instead: if (!selectedProduct) => remake the req. this clause was made so if someone visisted using a hardcoded url to an individual product
 
   // Fix for offcanvas scroll issue: remove Bootstrap's modal-backdrop and cleanup body classes
   useEffect(() => {
@@ -91,8 +94,9 @@ const ProductPage = () => {
           (item) => item.id === selectedProduct.id
         );
 
+        // local selectedQuantity state allows us to pass around a temporary qty in the component       
         if (existingItemIndex >= 0) {
-          const updatedCart = [...cartList];
+          const updatedCart = [...cartList]; // create new reference for react to detect (vs. same reference updatedCart = cartList)
           updatedCart[existingItemIndex].quantity += selectedQuantity;
           setCartList(updatedCart);
         } else {

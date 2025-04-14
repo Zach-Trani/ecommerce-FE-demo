@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+// Stripe redirects back to this page on successful checkout
 // to do: create unique order ID, hashing function to decode it into its matching sales transaction ID
 const CheckoutSuccessPage = () => {
     const navigate = useNavigate()

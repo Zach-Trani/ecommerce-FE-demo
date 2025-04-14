@@ -19,7 +19,7 @@ export const CartListContext = createContext<CartListContextType | undefined>(
 );
 
 function App() {
-
+  // Global State - defined
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartList, setCartList] = useState<CartItem[] | null>(null);
 
@@ -36,7 +36,7 @@ function App() {
     }
   }, [])
 
-  // Global Context Effect - cartList change: save to local storage for offline data persisentce
+  // On cartList global state change - save to local storage for offline data persisentce
   useEffect(() => {
     if (cartList && cartList.length > 0) {
       localStorage.setItem('cartList', JSON.stringify(cartList));

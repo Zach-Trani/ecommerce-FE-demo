@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+// Users can either hit the back arrow within stripe checkout to reach this page, or stripe redirects here on unsuccessful checkout
 const CheckoutCancelPage = () => {
     const navigate = useNavigate();
 

@@ -49,6 +49,7 @@ const handleCartCheckout = async (cartList : CartItem[] | null) => {
         ? "https://zach-ecommerce-backend.azurewebsites.net/product"
         : "http://localhost:9191/product";
 
+    // Post our cartList modified for stripe to our backend w
     const response = await fetch(`${baseurl}/v1/cart/checkout`, {
       method: "POST",
       credentials: "include",
