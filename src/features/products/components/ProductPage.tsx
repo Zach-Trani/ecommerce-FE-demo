@@ -42,7 +42,7 @@ const ProductPage = () => {
     };
 
     fetchProductDetails();
-  }, [id, selectedProduct, setSelectedProduct]); // <-- rework this dependency logic, instead: if (!selectedProduct) => remake the req. this clause was made so if someone visisted using a hardcoded url to an individual product
+  }, [id]);
 
   // Fix for offcanvas scroll issue: remove Bootstrap's modal-backdrop and cleanup body classes
   useEffect(() => {

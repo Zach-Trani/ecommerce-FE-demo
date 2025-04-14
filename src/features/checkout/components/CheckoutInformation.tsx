@@ -271,8 +271,7 @@ const CheckoutInformation = () => {
                           placeholder="ZIP"
                           value={customerInfo.zipCode}
                           onChange={handleInputChange}
-                          required              <Route path="/checkout" element={<CheckoutInformation />} />
-
+                          required
                         />
                       </div>
                     </div>
